@@ -1,13 +1,17 @@
 <template>
-  <div class="q-pa-md">
-    <q-table
-      title="Treats"
-      :rows="rows"
-      :columns="columns"
-      @row-click="onRowClick"
-      row-key="name"
-    />
-  </div>
+  <q-page padding>
+    <div class="q-pa-md flex flex-center column items-start q-gutter-md">
+      <div class="my-card">
+      <q-table
+        title="Treats"
+        :rows="rows"
+        :columns="columns"
+        @row-click="onRowClick"
+        row-key="name"
+      />
+      </div>
+    </div>
+  </q-page>
 </template>
 <!--<q-separator />-->
 
@@ -28,11 +32,19 @@ export default {
   },
   computed: {
     user () {
+      console.log('user')
       return this.$store.state.user
     }
   },
-  mounted () {
-    this.getList()
+  watch: {
+    user: 'getList'
+  },
+  created () {
+    if (this.$store.state.user.token === '') {
+      this.$router.push('/login')
+    } else {
+      this.getList()
+    }
   },
   methods: {
     async getList () {
@@ -47,6 +59,7 @@ export default {
       })
       if (ret === false) {
         this.rows = []
+        this.$store.commit('logout')
       } else {
         this.rows = ret.data
       }

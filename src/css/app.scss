@@ -1,1 +1,6 @@
 // app global css in SCSS form
+.q-expansion-item {
+  .cursor-pointer {
+    display: none;
+  }
+}

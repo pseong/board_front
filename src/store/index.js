@@ -21,21 +21,24 @@ export default store(function (/* { ssrContext } */) {
     state () {
       return {
         user: {
-          token: null
+          token: '',
+          user_rid: ''
         }
       }
     },
     mutations: {
-      login (state, token) {
-        state.user.token = token
+      login (state, data) {
+        state.user.token = data.access_token
+        state.user.user_rid = data.user_rid
       },
       logout (state) {
-        state.user.token = null
+        state.user.token = ''
+        state.user.token = ''
       }
     },
     plugins: [
       persistedstate({
-        paths: ['user']
+        paths: ['user', 'user_rid']
       })
     ],
     // enable strict mode (adds overhead!)

@@ -46,8 +46,7 @@ export default {
         this.password = ''
         this.$refs.id.focus()
       } else {
-        this.$store.commit('login', ret.data.access_token)
-        console.log(ret.data.access_token)
+        this.$store.commit('login', ret.data)
         this.$router.push('/')
       }
     }
