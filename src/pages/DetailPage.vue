@@ -65,7 +65,7 @@
                               {{ comment.created_date }}
                               <a class="q-ml-xs" @click="expand(i+1)">답글쓰기</a>
                               <a v-if="comment.user_rid === $store.state.user.user_rid" class="q-ml-xs" @click="edit(i+1)">수정</a>
-                              <a v-if="comment.user_rid === $store.state.user.user_rid" class="q-ml-xs" @click="remove(i+1)">삭제</a>
+                              <a v-if="comment.user_rid === $store.state.user.user_rid" class="q-ml-xs" @click="remove(comment.board_rid)">삭제</a>
                             </q-item-label>
                           </div>
                         </q-item-section>
@@ -180,11 +180,30 @@ export default {
         this.expanded[idx] = true
       }
     },
-    remove (idx) {
-      if (this.expanded[idx] === true) {
-        this.expanded[idx] = false
+    async remove (boardRid) {
+      console.log(boardRid)
+      const ret = (await axios({
+        method: 'post',
+        url: 'http://49.165.168.138:8000/boards/delete',
+        data: {
+          board_rid: boardRid
+        },
+        headers: { Authorization: 'Bearer ' + this.$store.state.user.token }
+      }).catch(e => {
+        console.log(e)
+        return false
+      }))
+      if (ret === false) {
+        this.$q.notify({
+          message: '삭제할 수 없습니다.',
+          color: 'negative'
+        })
       } else {
-        this.expanded[idx] = true
+        this.$q.notify({
+          message: '삭제되었습니다.',
+          color: 'positive'
+        })
+        this.getList()
       }
     }
   }
